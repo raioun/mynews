@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Auth; // ←追加(松田メンター)
 // 以下を追記することで、News Modelが扱えるようになる
 use App\News;
 
+// 以下を追記(Lesson17)
+use App\History;
+
+use Carbon\Carbon;
+// ここまで追記(Lesson17)
+
 class NewsController extends Controller
 {
     
@@ -96,6 +102,13 @@ class NewsController extends Controller
         
         // 該当するデータを上書きして保存する
         $news->fill($news_form)->save();
+        
+        // 以下を追記(Lesson17)
+        $history = new History;
+        $history->news_id = $news->id;
+        $history->edited_at = Carbon::now();
+        $history->save();
+        // ここまで追記(Lesson17)
         
         return redirect('admin/news');
     }

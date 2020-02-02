@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth; // ←追加(松田メンター)
 // 以下を追記することで、Profile Modelが扱えるようになる
 use App\Profile;
 
+// 以下を追記(Lesson17課題2)
+use App\ProfileHistory;
+
+use Carbon\Carbon;
+
 class ProfileController extends Controller
 {
     // 以下追記(add,create,edit,updateというアクションを追加)
@@ -76,6 +81,13 @@ class ProfileController extends Controller
         
         $profile->fill($profile_form)->save();
         unset($profile_form['_token']);
+        
+        // 以下を追記(Lesson17課題2)
+        $profile_history = new ProfileHistory;
+        $profile_history->profile_id = $profile->id;
+        $profile_history->edited_at = Carbon::now();
+        $profile_history->save();
+        
         
         return redirect('admin/profile/');
     }
